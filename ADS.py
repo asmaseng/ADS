@@ -1,112 +1,206 @@
-# Task 1: Print numbers from 1 to n
-def print_1_to_n(n):
+# task 1
+def print_numbers(n):
     if n == 0:
         return
-    print_1_to_n(n - 1)
+
+    print_numbers(n - 1)
     print(n, end=" ")
 
-# Task 2: Print numbers from n to 1
-def print_n_to_1(n):
-    if n == 0:
+
+num = int(input())
+print_numbers(num)
+
+
+# task 2
+def print_numbers_reversed(n):
+    if n < 1:
         return
-    print(n, end=" ")
-    print_n_to_1(n - 1)
 
-# Task 3: Sum of first n natural numbers
-def sum_n(n):
+    print(n, end=" ")
+    print_numbers_reversed(n - 1)
+
+
+num = int(input())
+print_numbers_reversed(num)
+
+
+# task 3
+def calculate_numbers(n):
     if n == 0:
         return 0
-    return n + sum_n(n - 1)
+    return n + calculate_numbers(n - 1)
 
-# Task 4: Factorial
-def factorial(n):
-    if n == 0 or n == 1:
+
+num = int(input())
+print(calculate_numbers(num))
+
+
+# task 4
+def factorial_of_num(n):
+    if n == 0:
         return 1
-    return n * factorial(n - 1)
+    return n * factorial_of_num(n - 1)
 
-# Task 5: Power (a^b)
-def power(a, b):
+
+num = int(input())
+print(factorial_of_num(num))
+
+# task 5
+a = int(input('Enter the num: '))
+b = int(input('Enter the power: '))
+
+
+def power_of_num(a, b):
     if b == 0:
         return 1
-    return a * power(a, b - 1)
+    return a * power_of_num(a, b - 1)
 
-# Task 6: Sum of digits
-def sum_digits(n):
+
+print(power_of_num(a, b))
+
+# task 6
+n = int(input())
+
+
+def sum_of_digits(n):
     if n == 0:
         return 0
-    return n % 10 + sum_digits(n // 10)
+    return (n % 10) + sum_of_digits(n // 10)
 
-# Task 7: Count digits
-def count_digits(n):
+
+print(sum_of_digits(n))
+
+# task 7
+n = int(input())
+
+
+def num_of_digits(n):
     if n == 0:
-        return 1
-    return 1 + count_digits(n // 10) if n >= 10 else 1
+        return 0
+    return 1 + num_of_digits(n // 10)
 
-# Task 8: Reverse number
-def reverse_number(n, rev=0):
+
+print(num_of_digits(n))
+
+# task 8
+n = int(input())
+
+
+def reversed_number(n):
     if n == 0:
-        return rev
-    return reverse_number(n // 10, rev * 10 + n % 10)
+        return
+    print(n % 10, end='')
+    reversed_number(n // 10)
 
-# Task 9: Fibonacci (nth)
+
+reversed_number(n)
+
+# task 9
+n = int(input())
+
+
 def fibonacci(n):
-    if n == 0:
-        return 0
-    if n == 1:
-        return 1
+    if n <= 1:
+        return n
     return fibonacci(n - 1) + fibonacci(n - 2)
 
-# Task 10: Palindrome check
-def is_palindrome(s):
-    if len(s) <= 1:
-        return True
-    if s[0] != s[-1]:
-        return False
-    return is_palindrome(s[1:-1])
 
-# Task 11: Sum of array
-def sum_array(arr, n):
-    if n == 0:
+print(fibonacci(n))
+
+# task 10
+word = input('enter your word: ')
+
+
+def palindrome(word):
+    return word == word[::-1]
+
+
+print(palindrome(word))
+
+# task 11
+arr = list(map(int, input().split()))
+
+
+def sum_of_array(arr, i=0):
+    if len(arr) == i:
         return 0
-    return arr[n - 1] + sum_array(arr, n - 1)
+    return arr[i] + sum_of_array(arr, i + 1)
 
-# Task 12: Maximum in array
-def max_array(arr, n):
-    if n == 1:
-        return arr[0]
-    return max(arr[n - 1], max_array(arr, n - 1))
 
-# Task 13: Count occurrences
-def count_occurrences(arr, n, target):
-    if n == 0:
+print(sum_of_array(arr))
+
+# task 12
+arr = list(map(int, input().split()))
+
+
+def max_of_array(arr, i=0):
+    if len(arr) - 1 == i:
+        return arr[i]
+    max_rest = max_of_array(arr, i + 1)
+    return arr[i] if arr[i] > max_rest else max_rest
+
+
+print(max_of_array(arr))
+
+# task 13
+arr = list(map(int, input().split()))
+target = int(input())
+
+
+def count_occurences(arr, target, i=0):
+    if i == len(arr):
         return 0
-    count = 1 if arr[n - 1] == target else 0
-    return count + count_occurrences(arr, n - 1, target)
-
-# Task 14: Recursive linear search
-def linear_search(arr, n, target):
-    if n == 0:
-        return False
-    if arr[n - 1] == target:
-        return True
-    return linear_search(arr, n - 1, target)
-
-# Task 15: Check if array is sorted
-def is_sorted(arr, n):
-    if n == 1:
-        return True
-    if arr[n - 1] < arr[n - 2]:
-        return False
-    return is_sorted(arr, n - 1)
-
-# Task 16: Recursive binary search
-def binary_search(arr, left, right, target):
-    if left > right:
-        return -1
-    mid = (left + right) // 2
-    if arr[mid] == target:
-        return mid
-    elif arr[mid] > target:
-        return binary_search(arr, left, mid - 1, target)
+    if arr[i] == target:
+        count = 1
     else:
-        return binary_search(arr, mid + 1, right, target)
+        count = 0
+    return count + count_occurences(arr, target, i + 1)
+
+
+print(count_occurences(arr, target))
+
+# task 14
+arr = list(map(int, input().split()))
+target = int(input())
+
+
+def search(arr, target, i=0):
+    if i == len(arr):
+        return False
+    if arr[i] == target:
+        return True
+    return search(arr, target, i + 1)
+
+
+print(search(arr, target))
+
+# task 15
+arr = list(map(int, input().split()))
+
+
+def sorted_list(arr, i=0):
+    if len(arr) - 1 == i:
+        return True
+
+    if arr[i] > arr[i + 1]:
+        return False
+
+    return sorted_list(arr, i + 1)
+
+
+print(sorted_list(arr))
+
+# task 16
+arr = list(map(int, input().split()))
+target = int(input())
+
+
+def search(arr, target, i=0):
+    if i == len(arr):
+        return -1
+    if arr[i] == target:
+        return i
+    return search(arr, target, i + 1)
+
+
+print(search(arr, target))
