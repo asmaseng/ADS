@@ -1,206 +1,143 @@
-# task 1
-def print_numbers(n):
-    if n == 0:
-        return
-
-    print_numbers(n - 1)
-    print(n, end=" ")
-
-
-num = int(input())
-print_numbers(num)
-
-
-# task 2
-def print_numbers_reversed(n):
-    if n < 1:
-        return
-
-    print(n, end=" ")
-    print_numbers_reversed(n - 1)
-
-
-num = int(input())
-print_numbers_reversed(num)
-
-
-# task 3
-def calculate_numbers(n):
-    if n == 0:
-        return 0
-    return n + calculate_numbers(n - 1)
-
-
-num = int(input())
-print(calculate_numbers(num))
-
-
-# task 4
-def factorial_of_num(n):
-    if n == 0:
-        return 1
-    return n * factorial_of_num(n - 1)
-
-
-num = int(input())
-print(factorial_of_num(num))
-
-# task 5
-a = int(input('Enter the num: '))
-b = int(input('Enter the power: '))
-
-
-def power_of_num(a, b):
-    if b == 0:
-        return 1
-    return a * power_of_num(a, b - 1)
-
-
-print(power_of_num(a, b))
-
-# task 6
-n = int(input())
-
-
-def sum_of_digits(n):
-    if n == 0:
-        return 0
-    return (n % 10) + sum_of_digits(n // 10)
-
-
-print(sum_of_digits(n))
-
-# task 7
-n = int(input())
-
-
-def num_of_digits(n):
-    if n == 0:
-        return 0
-    return 1 + num_of_digits(n // 10)
-
-
-print(num_of_digits(n))
-
-# task 8
-n = int(input())
-
-
-def reversed_number(n):
-    if n == 0:
-        return
-    print(n % 10, end='')
-    reversed_number(n // 10)
-
-
-reversed_number(n)
-
-# task 9
-n = int(input())
-
-
-def fibonacci(n):
-    if n <= 1:
-        return n
-    return fibonacci(n - 1) + fibonacci(n - 2)
-
-
-print(fibonacci(n))
-
-# task 10
-word = input('enter your word: ')
-
-
-def palindrome(word):
-    return word == word[::-1]
-
-
-print(palindrome(word))
-
-# task 11
-arr = list(map(int, input().split()))
-
-
-def sum_of_array(arr, i=0):
-    if len(arr) == i:
-        return 0
-    return arr[i] + sum_of_array(arr, i + 1)
-
-
-print(sum_of_array(arr))
-
-# task 12
-arr = list(map(int, input().split()))
-
-
-def max_of_array(arr, i=0):
-    if len(arr) - 1 == i:
-        return arr[i]
-    max_rest = max_of_array(arr, i + 1)
-    return arr[i] if arr[i] > max_rest else max_rest
-
-
-print(max_of_array(arr))
-
-# task 13
-arr = list(map(int, input().split()))
-target = int(input())
-
-
-def count_occurences(arr, target, i=0):
-    if i == len(arr):
-        return 0
-    if arr[i] == target:
-        count = 1
-    else:
-        count = 0
-    return count + count_occurences(arr, target, i + 1)
-
-
-print(count_occurences(arr, target))
-
-# task 14
-arr = list(map(int, input().split()))
-target = int(input())
-
-
-def search(arr, target, i=0):
-    if i == len(arr):
-        return False
-    if arr[i] == target:
-        return True
-    return search(arr, target, i + 1)
-
-
-print(search(arr, target))
-
-# task 15
-arr = list(map(int, input().split()))
-
-
-def sorted_list(arr, i=0):
-    if len(arr) - 1 == i:
-        return True
-
-    if arr[i] > arr[i + 1]:
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    # 1.
+    def add_to_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+
+    # 2.
+    def add_to_end(self, data):
+        new_node = Node(data)
+
+        if not self.head:
+            self.head = new_node
+            return
+
+        current = self.head
+        while current.next:
+            current = current.next
+
+        current.next = new_node
+
+    # 3.
+    def remove_last(self):
+        if not self.head:
+            return
+
+        if not self.head.next:
+            self.head = None
+            return
+
+        current = self.head
+        while current.next.next:
+            current = current.next
+
+        current.next = None
+
+    # 4.
+    def print_list(self):
+        current = self.head
+        while current:
+            print(current.data, end=" -> ")
+            current = current.next
+        print("None")
+
+    # 5.
+    def search(self, value):
+        current = self.head
+        while current:
+            if current.data == value:
+                return True
+            current = current.next
         return False
 
-    return sorted_list(arr, i + 1)
+    # 6.
+    def insert_at_position(self, data, position):
+        new_node = Node(data)
 
+        if position == 0:
+            new_node.next = self.head
+            self.head = new_node
+            return
 
-print(sorted_list(arr))
+        current = self.head
+        for _ in range(position - 1):
+            if not current:
+                return
+            current = current.next
 
-# task 16
-arr = list(map(int, input().split()))
-target = int(input())
+        new_node.next = current.next
+        current.next = new_node
 
+    # 7.
+    def remove_by_value(self, value):
+        if not self.head:
+            return
 
-def search(arr, target, i=0):
-    if i == len(arr):
-        return -1
-    if arr[i] == target:
-        return i
-    return search(arr, target, i + 1)
+        if self.head.data == value:
+            self.head = self.head.next
+            return
 
+        current = self.head
+        while current.next:
+            if current.next.data == value:
+                current.next = current.next.next
+                return
+            current = current.next
 
-print(search(arr, target))
+    # 8.
+    def combine(self, other):
+        if not self.head:
+            self.head = other.head
+            return
+
+        current = self.head
+        while current.next:
+            current = current.next
+
+        current.next = other.head
+
+    # 9.
+    def reverse(self):
+        prev = None
+        current = self.head
+
+        while current:
+            next_node = current.next  # сохраняем!
+            current.next = prev       # переворачиваем
+            prev = current
+            current = next_node
+
+        self.head = prev
+
+    # 10.
+    def sort(self):
+        sorted_head = None
+        current = self.head
+
+        while current:
+            next_node = current.next
+
+            if not sorted_head or current.data < sorted_head.data:
+                current.next = sorted_head
+                sorted_head = current
+            else:
+                temp = sorted_head
+                while temp.next and temp.next.data < current.data:
+                    temp = temp.next
+
+                current.next = temp.next
+                temp.next = current
+
+            current = next_node
+
+        self.head = sorted_head
