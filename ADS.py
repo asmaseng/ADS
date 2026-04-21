@@ -6,7 +6,7 @@ def twoSum(nums, target):
         if need in m:
             return [m[need], i]
         m[nums[i]] = i
-
+print(twoSum([2,7,11,15], 9))
 
 # -------- Task 2 --------
 def firstUniqChar(s):
@@ -17,6 +17,7 @@ def firstUniqChar(s):
         if count[c] == 1:
             return i
     return -1
+print("Task 2:", firstUniqChar("leetcode"))
 
 
 # -------- Task 3 --------
@@ -30,6 +31,7 @@ def isIsomorphic(s, t):
         m1[s[i]] = t[i]
         m2[t[i]] = s[i]
     return True
+print("Task 3:", isIsomorphic("egg", "add"))
 
 
 # -------- Task 4 --------
@@ -39,7 +41,7 @@ def isHappy(n):
         seen.add(n)
         n = sum(int(d)**2 for d in str(n))
     return n == 1
-
+print("Task 4:", isHappy(19))
 
 # -------- Tree Node --------
 class TreeNode:
@@ -48,6 +50,11 @@ class TreeNode:
         self.left = left
         self.right = right
 
+root = TreeNode(3)
+root.left = TreeNode(9)
+root.right = TreeNode(20)
+root.right.left = TreeNode(15)
+root.right.right = TreeNode(7)
 
 # -------- Task 5 --------
 from collections import deque
@@ -68,14 +75,14 @@ def levelOrder(root):
                 q.append(node.right)
         res.append(level)
     return res
-
+print("Task 5:", levelOrder(root))
 
 # -------- Task 6 --------
 def maxDepth(root):
     if not root:
         return 0
     return 1 + max(maxDepth(root.left), maxDepth(root.right))
-
+print("Task 6:", maxDepth(root))
 
 # -------- Task 7 --------
 def isSymmetric(root):
@@ -88,6 +95,7 @@ def isSymmetric(root):
                 mirror(a.left, b.right) and
                 mirror(a.right, b.left))
     return mirror(root, root)
+print("Task 7:", isSymmetric(root))
 
 
 # -------- Task 8 --------
@@ -103,7 +111,7 @@ def longestConsecutive(root):
                    dfs(node.left, node, length),
                    dfs(node.right, node, length))
     return dfs(root, None, 0)
-
+print("Task 8:", longestConsecutive(root))
 
 # -------- Task 9 --------
 def sortColors(nums):
@@ -118,7 +126,9 @@ def sortColors(nums):
         else:
             nums[mid], nums[high] = nums[high], nums[mid]
             high -= 1
-
+nums = [2,0,2,1,1,0]
+sortColors(nums)
+print("Task 9:", nums)
 
 # -------- Task 10 --------
 def quickSort(nums, l, r):
@@ -136,7 +146,9 @@ def partition(nums, l, r):
             nums[i], nums[j] = nums[j], nums[i]
     nums[i+1], nums[r] = nums[r], nums[i+1]
     return i + 1
-
+arr = [5,2,3,1]
+quickSort(arr, 0, len(arr)-1)
+print("Task 10:", arr)
 
 # -------- Task 11 --------
 def mergeSort(nums):
@@ -158,7 +170,7 @@ def merge(a, b):
     res += a[i:]
     res += b[j:]
     return res
-
+print("Task 11:", mergeSort([5,2,3,1]))
 
 # -------- Task 12 --------
 def heapSort(nums):
@@ -179,3 +191,6 @@ def heapify(nums, n, i):
     if largest != i:
         nums[i], nums[largest] = nums[largest], nums[i]
         heapify(nums, n, largest)
+arr2 = [4,10,3,5,1]
+heapSort(arr2)
+print("Task 12:", arr2)
