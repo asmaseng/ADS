@@ -1,196 +1,191 @@
-# -------- Task 1 --------
-def twoSum(nums, target):
-    m = {}
-    for i in range(len(nums)):
-        need = target - nums[i]
-        if need in m:
-            return [m[need], i]
-        m[nums[i]] = i
-print(twoSum([2,7,11,15], 9))
-
-# -------- Task 2 --------
-def firstUniqChar(s):
-    count = {}
-    for c in s:
-        count[c] = count.get(c, 0) + 1
-    for i, c in enumerate(s):
-        if count[c] == 1:
-            return i
-    return -1
-print("Task 2:", firstUniqChar("leetcode"))
-
-
-# -------- Task 3 --------
-def isIsomorphic(s, t):
-    m1, m2 = {}, {}
-    for i in range(len(s)):
-        if s[i] in m1 and m1[s[i]] != t[i]:
-            return False
-        if t[i] in m2 and m2[t[i]] != s[i]:
-            return False
-        m1[s[i]] = t[i]
-        m2[t[i]] = s[i]
-    return True
-print("Task 3:", isIsomorphic("egg", "add"))
-
-
-# -------- Task 4 --------
-def isHappy(n):
-    seen = set()
-    while n != 1 and n not in seen:
-        seen.add(n)
-        n = sum(int(d)**2 for d in str(n))
-    return n == 1
-print("Task 4:", isHappy(19))
-
-# -------- Tree Node --------
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
-
-root = TreeNode(3)
-root.left = TreeNode(9)
-root.right = TreeNode(20)
-root.right.left = TreeNode(15)
-root.right.right = TreeNode(7)
-
-# -------- Task 5 --------
 from collections import deque
-
-def levelOrder(root):
-    if not root:
-        return []
-    res = []
-    q = deque([root])
-    while q:
-        level = []
-        for _ in range(len(q)):
-            node = q.popleft()
-            level.append(node.val)
-            if node.left:
-                q.append(node.left)
-            if node.right:
-                q.append(node.right)
-        res.append(level)
-    return res
-print("Task 5:", levelOrder(root))
-
-# -------- Task 6 --------
-def maxDepth(root):
-    if not root:
-        return 0
-    return 1 + max(maxDepth(root.left), maxDepth(root.right))
-print("Task 6:", maxDepth(root))
-
-# -------- Task 7 --------
-def isSymmetric(root):
-    def mirror(a, b):
-        if not a and not b:
-            return True
-        if not a or not b:
-            return False
-        return (a.val == b.val and
-                mirror(a.left, b.right) and
-                mirror(a.right, b.left))
-    return mirror(root, root)
-print("Task 7:", isSymmetric(root))
+import heapq
 
 
-# -------- Task 8 --------
-def longestConsecutive(root):
-    def dfs(node, parent, length):
-        if not node:
-            return length
-        if parent and node.val == parent.val + 1:
-            length += 1
-        else:
-            length = 1
-        return max(length,
-                   dfs(node.left, node, length),
-                   dfs(node.right, node, length))
-    return dfs(root, None, 0)
-print("Task 8:", longestConsecutive(root))
+graph = {
+    'A': ['C', 'B', 'D'],
+    'B': ['A', 'C', 'E', 'G'],
+    'C': ['A', 'B', 'D'],
+    'D': ['C', 'A'],
+    'E': ['G', 'F', 'B'],
+    'F': ['G', 'E'],
+    'G': ['F', 'B'],
+}
 
-# -------- Task 9 --------
-def sortColors(nums):
-    low, mid, high = 0, 0, len(nums) - 1
-    while mid <= high:
-        if nums[mid] == 0:
-            nums[low], nums[mid] = nums[mid], nums[low]
-            low += 1
-            mid += 1
-        elif nums[mid] == 1:
-            mid += 1
-        else:
-            nums[mid], nums[high] = nums[high], nums[mid]
-            high -= 1
-nums = [2,0,2,1,1,0]
-sortColors(nums)
-print("Task 9:", nums)
+# TASK 1
 
-# -------- Task 10 --------
-def quickSort(nums, l, r):
-    if l < r:
-        p = partition(nums, l, r)
-        quickSort(nums, l, p - 1)
-        quickSort(nums, p + 1, r)
+def dfs(graph, source):
 
-def partition(nums, l, r):
-    pivot = nums[r]
-    i = l - 1
-    for j in range(l, r):
-        if nums[j] < pivot:
-            i += 1
-            nums[i], nums[j] = nums[j], nums[i]
-    nums[i+1], nums[r] = nums[r], nums[i+1]
-    return i + 1
-arr = [5,2,3,1]
-quickSort(arr, 0, len(arr)-1)
-print("Task 10:", arr)
+    marked = {}
+    visit_order = []
 
-# -------- Task 11 --------
-def mergeSort(nums):
-    if len(nums) <= 1:
-        return nums
-    mid = len(nums)//2
-    left = mergeSort(nums[:mid])
-    right = mergeSort(nums[mid:])
-    return merge(left, right)
+    def _dfs(v, depth=0):
+        indent = "  " * depth
+        marked[v] = True
+        visit_order.append(v)
+        print(f"{indent}dfs({v})  →  marked: {v},  visit order so far: {visit_order}")
 
-def merge(a, b):
-    res = []
-    i = j = 0
-    while i < len(a) and j < len(b):
-        if a[i] < b[j]:
-            res.append(a[i]); i += 1
-        else:
-            res.append(b[j]); j += 1
-    res += a[i:]
-    res += b[j:]
-    return res
-print("Task 11:", mergeSort([5,2,3,1]))
+        for w in graph[v]:
+            if w not in marked:
+                print(f"{indent}  edge {v}-{w}: {w} not marked → recurse")
+                _dfs(w, depth + 1)
+            else:
+                print(f"{indent}  edge {v}-{w}: {w} already marked → skip")
 
-# -------- Task 12 --------
-def heapSort(nums):
-    n = len(nums)
-    for i in range(n//2 - 1, -1, -1):
-        heapify(nums, n, i)
-    for i in range(n-1, 0, -1):
-        nums[0], nums[i] = nums[i], nums[0]
-        heapify(nums, i, 0)
+        print(f"{indent}return from dfs({v})")
 
-def heapify(nums, n, i):
-    largest = i
-    l, r = 2*i+1, 2*i+2
-    if l < n and nums[l] > nums[largest]:
-        largest = l
-    if r < n and nums[r] > nums[largest]:
-        largest = r
-    if largest != i:
-        nums[i], nums[largest] = nums[largest], nums[i]
-        heapify(nums, n, largest)
-arr2 = [4,10,3,5,1]
-heapSort(arr2)
-print("Task 12:", arr2)
+    print("=" * 60)
+    print(f"TASK 1 — DFS from source node: {source}")
+    print("=" * 60)
+    _dfs(source)
+    print(f"\nDFS Visit Order: {' → '.join(visit_order)}\n")
+    return visit_order
+
+
+
+# TASK 2
+
+def bfs(graph, source):
+
+    print("=" * 60)
+    print(f"TASK 2 — BFS from source node: {source}")
+    print("=" * 60)
+
+    marked = {}
+    visit_order = []
+    queue = deque()
+
+    marked[source] = True
+    queue.append(source)
+    print(f"Enqueue {source}. Queue: {list(queue)}")
+
+    step = 1
+    while queue:
+        v = queue.popleft()
+        visit_order.append(v)
+        print(f"\nStep {step}: Dequeue {v}  →  visit order so far: {visit_order}")
+        step += 1
+
+        for w in graph[v]:
+            if w not in marked:
+                marked[w] = True
+                queue.append(w)
+                print(f"  edge {v}-{w}: {w} not marked → enqueue {w}. Queue: {list(queue)}")
+            else:
+                print(f"  edge {v}-{w}: {w} already marked → skip")
+
+    print(f"\nBFS Visit Order: {' → '.join(visit_order)}\n")
+    return visit_order
+
+
+
+# TASK 3
+
+def task3_compare(dfs_result, bfs_result):
+    print("=" * 60)
+    print("TASK 3 — Implementation Comparison")
+    print("=" * 60)
+    print(f"DFS result (Task 1): {' → '.join(dfs_result)}")
+    print(f"BFS result (Task 2): {' → '.join(bfs_result)}")
+
+    dfs_match = dfs_result == ['A', 'C', 'B', 'E', 'G', 'F', 'D']
+    bfs_match = bfs_result == ['A', 'C', 'B', 'D', 'E', 'G', 'F']
+
+    print(f"\nExpected DFS: A → C → B → E → G → F → D")
+    print(f"DFS matches expected: {'✓ YES' if dfs_match else '✗ NO'}")
+    print(f"\nExpected BFS: A → C → B → D → E → G → F")
+    print(f"BFS matches expected: {'✓ YES' if bfs_match else '✗ NO'}\n")
+
+
+# TASK 4
+
+def dijkstra(graph_weighted, source, target):
+
+    dist = {v: float('inf') for v in graph_weighted}
+    dist[source] = 0
+
+
+    prev = {v: None for v in graph_weighted}
+
+
+    heap = [(0, source)]
+
+    visited = set()
+
+    print("=" * 60)
+    print(f"TASK 4 — Dijkstra's Shortest Path: {source} → {target}")
+    print("=" * 60)
+    print(f"\nInitial distances: { {v: (d if d != float('inf') else '∞') for v, d in dist.items()} }")
+
+    step = 1
+    while heap:
+        current_dist, u = heapq.heappop(heap)
+
+        if u in visited:
+            continue
+        visited.add(u)
+
+        print(f"\nStep {step}: Process '{u}' (dist = {current_dist})")
+        step += 1
+
+        if u == target:
+            break
+
+        for neighbor, weight in graph_weighted[u]:
+            if neighbor in visited:
+                continue
+            new_dist = current_dist + weight
+            print(f"  Check edge {u}→{neighbor} (weight={weight}): "
+                  f"new_dist={new_dist} vs current best={dist[neighbor] if dist[neighbor] != float('inf') else '∞'}", end="")
+            if new_dist < dist[neighbor]:
+                dist[neighbor] = new_dist
+                prev[neighbor] = u
+                heapq.heappush(heap, (new_dist, neighbor))
+                print(f"  → Updated! dist[{neighbor}] = {new_dist}")
+            else:
+                print(f"  → No improvement.")
+
+
+    path = []
+    node = target
+    while node is not None:
+        path.append(node)
+        node = prev[node]
+    path.reverse()
+
+    print(f"\nShortest distance from {source} to {target}: {dist[target]} miles")
+    print(f"Shortest path: {' → '.join(path)}\n")
+    return dist[target], path
+
+
+# Run
+
+
+if __name__ == "__main__":
+
+    # TASK 1
+    dfs_order = dfs(graph, 'A')
+
+    # TASK 2
+    bfs_order = bfs(graph, 'A')
+
+    # TASK 3
+    task3_compare(dfs_order, bfs_order)
+
+    # TASK 4
+    scotland = {
+        'Edinburgh': [('Stirling', 50), ('Dundee', 100), ('Glasgow', 70)],
+        'Stirling':  [('Edinburgh', 50), ('Perth', 40), ('Glasgow', 50)],
+        'Glasgow':   [('Stirling', 50), ('Edinburgh', 70)],
+        'Perth':     [('Stirling', 40), ('Dundee', 60)],
+        'Dundee':    [('Perth', 60), ('Edinburgh', 100)],
+    }
+
+    distance, path = dijkstra(scotland, 'Edinburgh', 'Dundee')
+
+    print("=" * 60)
+    print("SUMMARY — All Tasks")
+    print("=" * 60)
+    print(f"Task 1  DFS order : {' → '.join(dfs_order)}")
+    print(f"Task 2  BFS order : {' → '.join(bfs_order)}")
+    print(f"Task 4  Shortest  : {' → '.join(path)}  ({distance} miles)")
